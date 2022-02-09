@@ -2,6 +2,11 @@ import './style.css';
 
 import * as THREE from 'https://unpkg.com/three@0.126.1/build/three.module.js';
 
+//loading
+const textureLoader = new THREE.TextureLoader();
+
+const sunTexture = textureLoader.load('static/textures/sun.jpg');
+
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
     75,
@@ -14,7 +19,7 @@ renderer.setSize(window.innerWidth, window.innerHeight)
 document.body.appendChild(renderer.domElement)
 
 const geometry = new THREE.SphereBufferGeometry(.5,64,64);
-const material = new THREE.MeshBasicMaterial({color: 0xff0000});
+const material = new THREE.MeshBasicMaterial({map: sunTexture});
 const sphere = new THREE.Mesh(geometry,material);
 
 scene.add(sphere);
