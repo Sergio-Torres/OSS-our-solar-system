@@ -5,11 +5,16 @@ import * as THREE from 'https://unpkg.com/three@0.126.1/build/three.module.js';
 import vertexShader from './shader/vertex.glsl'
 //import fragmentShader from './shader/fragment.glsl'
 //console.log(fragmentShader)
+
 function coinFragmentShader(){
     return `
-    void main(){
-        gl_FragColor = vec4(1,0,0,1);
-    }
+        uniform sampler2D globeTexture;
+        varying vec2 vertexUV; 
+
+        void main(){
+           
+            gl_FragColor =  texture2D(globeTexture,vertexUV);
+        }
     `;
 }
 
