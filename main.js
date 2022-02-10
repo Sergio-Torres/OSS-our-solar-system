@@ -2,11 +2,16 @@ import './style.css';
 import * as THREE from 'https://unpkg.com/three@0.126.1/build/three.module.js';
 
 //shaders
-import vertexShader from './shader/vertex.glsl';
-
-//loading textures
-const textureLoader = new THREE.TextureLoader();
-const sunTexture = textureLoader.load('static/textures/sun.jpg');
+import vertexShader from './shader/vertex.glsl'
+//import fragmentShader from './shader/fragment.glsl'
+//console.log(fragmentShader)
+function coinFragmentShader(){
+    return `
+    void main(){
+        gl_FragColor = vec4(1,0,0,1);
+    }
+    `;
+}
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
@@ -23,13 +28,20 @@ renderer.setPixelRatio(window.devicePixelRatio);
 document.body.appendChild(renderer.domElement);
 
 //create Sun
-const sunGeometry = new THREE.SphereGeometry(5,50,50);
-const sunMaterial = new THREE.ShaderMaterial({
-   vertexShader,
-  //  fragmentSahder: , 
-});
-const sun = new THREE.Mesh(sunGeometry,sunMaterial);
 
+const sun = new THREE.Mesh(
+    new THREE.SphereGeometry(5,50,50),
+    new THREE.ShaderMaterial({
+        vertexShader,
+        fragmentShader: coinFragmentShader(),
+        uniforms: {
+            globeTexture:{
+                value: new THREE.TextureLoader().load('./static/textures/sun.jpg')
+            }
+        }
+
+    })
+)
 scene.add(sun);
 camera.position.z = 10;
 
