@@ -25,8 +25,8 @@ document.body.appendChild(renderer.domElement);
 //create Sun
 const sunGeometry = new THREE.SphereGeometry(5,50,50);
 const sunMaterial = new THREE.ShaderMaterial({
-    vertexShader: ,
-    fragmentSahder: , 
+   vertexShader,
+  //  fragmentSahder: , 
 });
 const sun = new THREE.Mesh(sunGeometry,sunMaterial);
 
