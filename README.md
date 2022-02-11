@@ -10,7 +10,8 @@ OSS is a website with 3D effect, made using Three Js and Tailwind Css, it is sti
 ### `npm install`
 
 2.Start the development server
-### `npm start`
+### `npm run dev`
+### Local: http://localhost:3000/
 
 3. Generate a full static production build
 ### `npm run build`
