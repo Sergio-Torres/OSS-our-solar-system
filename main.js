@@ -59,7 +59,6 @@ renderer.setSize(canvasContainer.offsetWidth, canvasContainer.offsetHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
 
 //create Sun
-
 const sun = new THREE.Mesh(
     new THREE.SphereGeometry(5,50,50),
     new THREE.ShaderMaterial({
@@ -88,7 +87,9 @@ const atmosphere = new THREE.Mesh(
             side: THREE.BackSide
     })
 )
+
 //scale of atmosphere/glowing
+
 atmosphere.scale.set(1.1, 1.1, 1.1)
 
 scene.add(atmosphere);
@@ -98,10 +99,12 @@ group.add(sun)
 scene.add(group)
 
 //background stars
+
 const starGeometry = new THREE.BufferGeometry()
 const starMaterial = new THREE.PointsMaterial({
     color: 0xffffff
 })
+
 const starVertices = []
 
 for(let i = 0; i <10000; i++){
@@ -110,6 +113,7 @@ for(let i = 0; i <10000; i++){
     const z = -Math.random() * 2000
     starVertices.push(x,y,z)
 }
+
 starGeometry.setAttribute('position', 
     new THREE.Float32BufferAttribute(starVertices, 3))
 
@@ -117,7 +121,6 @@ const stars = new THREE.Points(starGeometry, starMaterial)
 scene.add(stars)
 
 camera.position.z = 10;
-
 
 const mouse = {
     x: undefined,
