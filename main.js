@@ -1,11 +1,14 @@
 import './style.css';
+import gsap  from 'gsap';
 import * as THREE from 'https://unpkg.com/three@0.126.1/build/three.module.js';
 
 //shaders
 import vertexShader from './shader/vertex.glsl'
-//import fragmentShader from './shader/fragment.glsl'
-//console.log(fragmentShader)
+import atmosphereVertexShader from './shader/atmosphereVertex.glsl'
 
+/*
+ Fragment shader
+ */
 function coinFragmentShader(){
     return `
         uniform sampler2D globeTexture;
@@ -19,10 +22,24 @@ function coinFragmentShader(){
             vec3 atmosphere = 
                 vec3(0.5, 0.2, 0.0) * pow(intensity, 1.5);
 
-            gl_FragColor =  vec4(atmosphere + texture2D(globeTexture,vertexUV).xyz,1.0);
+            gl_FragColor =  vec4(atmosphere + texture2D
+                (globeTexture,vertexUV).xyz,1.0);
         }
     `;
 }
+
+function atmosphereFragmentShader(){
+    return `
+        varying vec3 vertexNormal;
+        
+        void main(){
+            float intensity = pow(0.6 - dot(vertexNormal, vec3(0, 0, 1.0)),2.0);
+
+            gl_FragColor = vec4(1.0, 1.0, 0.0, 1.0) * intensity;
+        }
+    `;
+}
+
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
@@ -53,16 +70,54 @@ const sun = new THREE.Mesh(
 
     })
 )
+
 scene.add(sun);
-camera.position.z = 10;
 
 //create atmosphere
 
+const atmosphere = new THREE.Mesh(
+    new THREE.SphereGeometry(5,50,50),
+    new THREE.ShaderMaterial({
+        vertexShader: atmosphereVertexShader,
+        fragmentShader: 
+            atmosphereFragmentShader(),
+            blending: THREE.AddActiveBlending,
+            side: THREE.BackSide
+    })
+)
+//scale of atmosphere/glowing
+atmosphere.scale.set(1.1, 1.1, 1.1)
+
+scene.add(atmosphere);
+
+const group = new THREE.Group()
+group.add(sun)
+scene.add(group)
+
+camera.position.z = 10;
+
+
+const mouse = {
+    x: undefined,
+    y: undefined
+}
+
 function animate(){
     requestAnimationFrame(animate);
-    sun.rotation.x += 0.001;
-    sun.rotation.y += 0.001;
     renderer.render(scene, camera);
+    sun.rotation.y += 0.001;
+    gsap.to(group.rotation, {
+        x: -mouse.y * 0.3,
+        y: mouse.x * 0.5,
+        duration: 2
+    })
 }
 
 animate();
+
+//movement interaction
+
+addEventListener('mousemove', ()=>{
+    mouse.x = (event.clientX / innerWidth) * 2 -1
+    mouse.y = -(event.clientY / innerHeight) * 2 +1
+})
